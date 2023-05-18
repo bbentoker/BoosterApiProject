@@ -1,0 +1,10 @@
+Booster details
+detail_id: primary key
+user_id: foreign key to user tables id
+boost_type: str (lol,valorant)
+server: str (na,euw,eune,kr,br,ru,lan,las,oce,tr)
+rank: str (iron,bronze,silver,gold,platinum,diamond,master,grandmaster,challenger)
+role: str
+details: str (details about the booster)
+price: int (price of the booster)
+

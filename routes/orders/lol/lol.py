@@ -1,9 +1,8 @@
 # routes1.py
 from fastapi import APIRouter,HTTPException, Depends, Request
-from pydantic import BaseModel
 from config import * 
 import jwt
-from validations.lol_validation import RankBoost, DuoBoost, WinBoost, PlacementBoost, NormalBoost
+from validations.lol_validation import RankBoost, DuoBoost, WinBoost, PlacementsBoost, NormalBoost
 from database.db_lol_crud import LOL_CRUD
 from fastapi.security import OAuth2PasswordBearer
 import time
@@ -36,6 +35,7 @@ def validate_token(token):
 async def rank_boost(order: RankBoost, request: Request):
     decoded = validate_token(request.headers.get("Authorization"))
     order.user_id = decoded["user_id"]
+    order.order_type = "rank_boost"
     
     lol_crud = LOL_CRUD()
     try:
@@ -63,6 +63,7 @@ async def rank_boost(order: RankBoost, request: Request):
 async def duo_boost(order: DuoBoost,request: Request):
     decoded = validate_token(request.headers.get("Authorization"))
     order.user_id = decoded["user_id"]
+    order.order_type = "duo_boost"
 
     lol_crud = LOL_CRUD()
     try:
@@ -70,7 +71,7 @@ async def duo_boost(order: DuoBoost,request: Request):
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
-    return {"message": {
+    return {"message": {    
         "current_rank": order.current_rank,
         "current_lp": order.current_lp,
         "server": order.server,
@@ -86,7 +87,8 @@ async def duo_boost(order: DuoBoost,request: Request):
 async def win_boost(order: WinBoost,request: Request):
     decoded = validate_token(request.headers.get("Authorization"))
     order.user_id = decoded["user_id"]
-    
+    order.order_type = "win_boost"
+
     lol_crud = LOL_CRUD()
     try:
         lol_crud.create_win_boost(order)
@@ -108,9 +110,10 @@ async def win_boost(order: WinBoost,request: Request):
 
 
 @app.post("/placement-boost")
-async def placement_boost(order: PlacementBoost, request: Request):
+async def placement_boost(order: PlacementsBoost, request: Request):
     decoded = validate_token(request.headers.get("Authorization"))
     order.user_id = decoded["user_id"]
+    order.order_type = "placement_boost"
     
 
     lol_crud = LOL_CRUD()
@@ -137,6 +140,7 @@ async def normal_boost(order: NormalBoost, request: Request):
 
     decoded = validate_token(request.headers.get("Authorization"))
     order.user_id = decoded["user_id"]
+    order.order_type = "normal_boost"
     
     lol_crud = LOL_CRUD()
     try:

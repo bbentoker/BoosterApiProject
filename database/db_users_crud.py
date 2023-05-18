@@ -23,6 +23,7 @@ class Users_CRUD:
         cur = conn.cursor()
         cur.execute("SELECT * FROM users WHERE username=%s AND password=%s", (user['username'], hashed_password))
         user = cur.fetchone()
+        print(user)
 
         if(user == None):
             raise  HTTPException(status_code=400, detail="Invalid username or password!")

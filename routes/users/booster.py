@@ -12,10 +12,16 @@ app = APIRouter(
 async def signup(user: Booster):
     user_crud = Boosters_CRUD()
     try:
-        user.role = "user"
+        user.user_role = "user"
         user_crud.create_user(user)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
     
    
     return {"message": "Booster created"}
+
+@app.post("/get-all-boosters")
+async def get_booster_data():
+    booster_crud = Boosters_CRUD()
+    
+    return booster_crud.get_all_boosters()

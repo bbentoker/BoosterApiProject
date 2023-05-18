@@ -15,8 +15,6 @@ app = APIRouter(
 
 
 
-
-
 @app.post("/login")
 async def login_for_access_token(form_data: UserLogin):
 
